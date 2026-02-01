@@ -1,17 +1,19 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useCallback, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Point, 
   FreehandElement, 
   RectangleElement, 
   EllipseElement, 
   LineElement,
+  TextElement,
   generateId, 
   Camera,
   CanvasElement
 } from '@/types/canvas';
 import { screenToCanvas, getBoundingBoxFromPoints, clamp } from '@/utils/drawing';
 import { ElementRenderer } from './ElementRenderer';
+import { TextEditor } from '@/components/toolbar/TextEditor';
 
 interface InfiniteCanvasProps {
   elements: CanvasElement[];
@@ -28,12 +30,17 @@ interface InfiniteCanvasProps {
   onUpdateDrawing: (updates: { points?: Point[]; width?: number; height?: number; endPoint?: Point }) => void;
   onFinishDrawing: () => void;
   onSelectElements: (ids: string[]) => void;
+  onAddElement: (element: CanvasElement) => void;
+}
+
+export interface InfiniteCanvasRef {
+  getSvgRef: () => SVGSVGElement | null;
 }
 
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
 
-export function InfiniteCanvas({
+export const InfiniteCanvas = forwardRef<InfiniteCanvasRef, InfiniteCanvasProps>(function InfiniteCanvas({
   elements,
   currentElement,
   selectedIds,
@@ -48,13 +55,19 @@ export function InfiniteCanvas({
   onUpdateDrawing,
   onFinishDrawing,
   onSelectElements,
-}: InfiniteCanvasProps) {
+  onAddElement,
+}, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [isPanning, setIsPanning] = useState(false);
   const lastPanPoint = useRef<Point | null>(null);
   const startPoint = useRef<Point | null>(null);
   const currentPoints = useRef<Point[]>([]);
+  const [textEditorPos, setTextEditorPos] = useState<{ x: number; y: number; canvasX: number; canvasY: number } | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    getSvgRef: () => svgRef.current,
+  }), []);
 
   // Get cursor style based on tool
   const getCursor = () => {
@@ -63,6 +76,7 @@ export function InfiniteCanvas({
       case 'select': return 'default';
       case 'pencil': return 'crosshair';
       case 'eraser': return 'crosshair';
+      case 'text': return 'text';
       case 'rectangle':
       case 'ellipse':
       case 'line':
@@ -107,6 +121,17 @@ export function InfiniteCanvas({
     if (activeTool === 'pan' || e.button === 1) {
       setIsPanning(true);
       lastPanPoint.current = { x: e.clientX, y: e.clientY };
+      return;
+    }
+
+    // Text tool - open text editor
+    if (activeTool === 'text' && e.button === 0) {
+      setTextEditorPos({
+        x: e.clientX,
+        y: e.clientY,
+        canvasX: canvasPoint.x,
+        canvasY: canvasPoint.y,
+      });
       return;
     }
 
@@ -286,6 +311,12 @@ export function InfiniteCanvas({
     }
   }, [isPanning, isDrawing, onFinishDrawing]);
 
+  // Handle text save
+  const handleTextSave = useCallback((element: TextElement) => {
+    onAddElement(element);
+    setTextEditorPos(null);
+  }, [onAddElement]);
+
   // Add wheel listener
   useEffect(() => {
     const container = containerRef.current;
@@ -333,6 +364,21 @@ export function InfiniteCanvas({
         )}
       </svg>
 
+      {/* Text Editor */}
+      <AnimatePresence>
+        {textEditorPos && (
+          <TextEditor
+            screenX={textEditorPos.x}
+            screenY={textEditorPos.y}
+            canvasX={textEditorPos.canvasX}
+            canvasY={textEditorPos.canvasY}
+            strokeColor={strokeColor}
+            onSave={handleTextSave}
+            onCancel={() => setTextEditorPos(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Zoom indicator */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -345,4 +391,4 @@ export function InfiniteCanvas({
       </motion.div>
     </div>
   );
-}
+});

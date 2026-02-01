@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { CanvasElement, FreehandElement, LineElement, ArrowElement } from '@/types/canvas';
+import { CanvasElement, FreehandElement, LineElement, ArrowElement, TextElement } from '@/types/canvas';
 import { getFreehandPath, getArrowHeadPoints } from '@/utils/drawing';
 
 interface ElementRendererProps {
@@ -25,6 +25,8 @@ export const ElementRenderer = memo(function ElementRenderer({
         return renderLine(element as LineElement);
       case 'arrow':
         return renderArrow(element as ArrowElement);
+      case 'text':
+        return renderText(element as TextElement);
       default:
         return null;
     }
@@ -151,5 +153,23 @@ function renderArrow(element: ArrowElement): JSX.Element {
         strokeLinejoin="round"
       />
     </g>
+  );
+}
+
+function renderText(element: TextElement): JSX.Element {
+  const { x, y, text, fontSize, fontFamily, strokeColor, textAlign } = element;
+  
+  return (
+    <text
+      x={x}
+      y={y + fontSize}
+      fill={strokeColor}
+      fontSize={fontSize}
+      fontFamily={fontFamily}
+      textAnchor={textAlign === 'center' ? 'middle' : textAlign === 'right' ? 'end' : 'start'}
+      style={{ userSelect: 'none' }}
+    >
+      {text}
+    </text>
   );
 }

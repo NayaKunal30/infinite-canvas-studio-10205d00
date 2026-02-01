@@ -9,11 +9,14 @@ import {
   Minus, 
   Eraser,
   Undo2,
-  Redo2
+  Redo2,
+  Type
 } from 'lucide-react';
 import { Tool } from '@/types/canvas';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ThemeToggle } from './ThemeToggle';
+import { ExportMenu } from './ExportMenu';
 
 interface ToolbarProps {
   activeTool: Tool;
@@ -22,6 +25,8 @@ interface ToolbarProps {
   onRedo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  svgRef?: React.RefObject<SVGSVGElement>;
+  elements?: any[];
 }
 
 const tools: { id: Tool; icon: React.ElementType; label: string; shortcut: string }[] = [
@@ -31,6 +36,7 @@ const tools: { id: Tool; icon: React.ElementType; label: string; shortcut: strin
   { id: 'rectangle', icon: Square, label: 'Rectangle', shortcut: 'R' },
   { id: 'ellipse', icon: Circle, label: 'Ellipse', shortcut: 'O' },
   { id: 'line', icon: Minus, label: 'Line', shortcut: 'L' },
+  { id: 'text', icon: Type, label: 'Text', shortcut: 'T' },
   { id: 'eraser', icon: Eraser, label: 'Eraser', shortcut: 'E' },
 ];
 
@@ -40,7 +46,9 @@ export function Toolbar({
   onUndo, 
   onRedo,
   canUndo,
-  canRedo 
+  canRedo,
+  svgRef,
+  elements = []
 }: ToolbarProps) {
   return (
     <motion.div
@@ -111,6 +119,15 @@ export function Toolbar({
               </TooltipContent>
             </Tooltip>
           ))}
+        </div>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-border/50 mx-1" />
+
+        {/* Export & Theme */}
+        <div className="flex items-center gap-0.5">
+          {svgRef && <ExportMenu elements={elements} svgRef={svgRef} />}
+          <ThemeToggle />
         </div>
       </div>
     </motion.div>

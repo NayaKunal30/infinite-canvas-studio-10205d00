@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { InfiniteCanvas } from '@/components/canvas/InfiniteCanvas';
+import { InfiniteCanvas, InfiniteCanvasRef } from '@/components/canvas/InfiniteCanvas';
 import { Toolbar } from '@/components/toolbar/Toolbar';
 import { ColorPalette } from '@/components/toolbar/ColorPalette';
 import { Minimap } from '@/components/toolbar/Minimap';
@@ -21,16 +21,20 @@ export function WhiteboardEditor() {
     finishDrawing,
     selectElements,
     deleteElements,
+    addElement,
     undo,
     redo,
     canUndo,
     canRedo,
   } = useCanvasState();
 
+  const canvasRef = useRef<InfiniteCanvasRef>(null);
+  const [svgRef, setSvgRef] = useState<React.RefObject<SVGSVGElement>>({ current: null });
+
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [showWelcome, setShowWelcome] = useState(true);
 
-  // Update dimensions on resize
+  // Update dimensions on resize and get svgRef
   useEffect(() => {
     const updateDimensions = () => {
       setDimensions({
@@ -41,7 +45,22 @@ export function WhiteboardEditor() {
     
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+
+    // Get SVG ref from canvas
+    const interval = setInterval(() => {
+      if (canvasRef.current) {
+        const svg = canvasRef.current.getSvgRef();
+        if (svg) {
+          setSvgRef({ current: svg });
+          clearInterval(interval);
+        }
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+      clearInterval(interval);
+    };
   }, []);
 
   // Hide welcome after 3 seconds or on first interaction
@@ -61,6 +80,7 @@ export function WhiteboardEditor() {
         'r': 'rectangle',
         'o': 'ellipse',
         'l': 'line',
+        't': 'text',
         'e': 'eraser',
       };
       
@@ -105,6 +125,7 @@ export function WhiteboardEditor() {
     <div className="fixed inset-0 overflow-hidden bg-canvas">
       {/* Canvas */}
       <InfiniteCanvas
+        ref={canvasRef}
         elements={state.elements}
         currentElement={state.currentElement}
         selectedIds={state.selectedIds}
@@ -119,6 +140,7 @@ export function WhiteboardEditor() {
         onUpdateDrawing={updateDrawing}
         onFinishDrawing={finishDrawing}
         onSelectElements={selectElements}
+        onAddElement={addElement}
       />
 
       {/* Toolbar */}
@@ -132,6 +154,8 @@ export function WhiteboardEditor() {
         onRedo={redo}
         canUndo={canUndo}
         canRedo={canRedo}
+        svgRef={svgRef}
+        elements={state.elements}
       />
 
       {/* Color Palette */}
