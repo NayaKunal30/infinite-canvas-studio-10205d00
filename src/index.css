@@ -2,95 +2,120 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Infinite Canvas Whiteboard - Design System
+   A premium glassmorphism design language with vibrant accents
 */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
+    /* Core backgrounds - deep dark slate */
+    --background: 222 47% 6%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    /* Cards/Panels - slightly elevated */
+    --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    /* Popover/Dropdowns */
+    --popover: 222 47% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - vibrant indigo/violet */
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    /* Secondary - muted slate */
+    --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted surfaces */
+    --muted: 217 33% 12%;
+    --muted-foreground: 215 20% 55%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent - vibrant cyan for highlights */
+    --accent: 192 95% 55%;
+    --accent-foreground: 222 47% 6%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Success */
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning */
+    --warning: 38 92% 55%;
+    --warning-foreground: 222 47% 6%;
+
+    /* Destructive */
+    --destructive: 0 72% 55%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Borders */
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 239 84% 67%;
+
+    /* Canvas specific */
+    --canvas: 222 47% 4%;
+    --canvas-grid: 217 33% 12%;
+    --canvas-selection: 239 84% 67%;
+
+    /* Glass effect values */
+    --glass-bg: 222 47% 10% / 0.7;
+    --glass-border: 217 33% 25% / 0.5;
+    --glass-blur: 16px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px -2px hsl(222 47% 2% / 0.5);
+    --shadow-md: 0 8px 24px -4px hsl(222 47% 2% / 0.6);
+    --shadow-lg: 0 16px 48px -8px hsl(222 47% 2% / 0.7);
+    --shadow-glow: 0 0 32px -8px hsl(239 84% 67% / 0.4);
+
+    /* Cursor colors for collaboration */
+    --cursor-1: 239 84% 67%;
+    --cursor-2: 142 76% 45%;
+    --cursor-3: 38 92% 55%;
+    --cursor-4: 0 72% 55%;
+    --cursor-5: 192 95% 55%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - matching dark theme */
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 239 84% 67%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 239 84% 67%;
+  }
+
+  /* Light theme variant */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 239 84% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 192 95% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 239 84% 60%;
+    --canvas: 220 14% 96%;
+    --canvas-grid: 220 13% 88%;
+    --glass-bg: 0 0% 100% / 0.8;
+    --glass-border: 220 13% 85% / 0.6;
   }
 }
 
@@ -99,7 +124,153 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground;
+    overflow: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/50;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer components {
+  /* Glassmorphism panel */
+  .glass-panel {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-lg;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card) / 0.9) 0%,
+      hsl(var(--card) / 0.7) 100%
+    );
+  }
+
+  /* Floating toolbar button */
+  .tool-button {
+    @apply relative flex items-center justify-center w-10 h-10 rounded-lg
+           text-muted-foreground hover:text-foreground hover:bg-secondary/80
+           transition-all duration-200 ease-out;
+  }
+
+  .tool-button.active {
+    @apply text-primary-foreground bg-primary shadow-md;
+    box-shadow: 0 0 20px -4px hsl(var(--primary) / 0.5);
+  }
+
+  .tool-button:hover:not(.active) {
+    transform: translateY(-1px);
+  }
+
+  /* Canvas container */
+  .canvas-container {
+    @apply absolute inset-0;
+    background-color: hsl(var(--canvas));
+    background-image: 
+      radial-gradient(circle at center, hsl(var(--canvas-grid)) 1px, transparent 1px);
+    background-size: 24px 24px;
+    cursor: crosshair;
+  }
+
+  /* Minimap */
+  .minimap {
+    @apply absolute bottom-4 right-4 w-48 h-32 rounded-xl overflow-hidden;
+    @apply glass-panel border border-border/30;
+  }
+
+  /* Selection box */
+  .selection-box {
+    @apply absolute pointer-events-none;
+    border: 2px solid hsl(var(--canvas-selection));
+    background: hsl(var(--canvas-selection) / 0.1);
+  }
+
+  /* Tooltip */
+  .tooltip-content {
+    @apply px-3 py-1.5 text-xs font-medium rounded-lg;
+    @apply bg-popover text-popover-foreground border border-border/50;
+    @apply shadow-md backdrop-blur-sm;
+  }
+
+  /* Input focus glow */
+  .input-glow:focus {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Keyboard shortcut badge */
+  .kbd {
+    @apply inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-medium
+           rounded bg-muted text-muted-foreground border border-border/50;
+    min-width: 1.25rem;
+  }
+}
+
+@layer utilities {
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Spring animation */
+  .animate-spring {
+    animation: spring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes spring {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Pulse glow */
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px -4px hsl(var(--primary) / 0.3); }
+    50% { box-shadow: 0 0 30px -2px hsl(var(--primary) / 0.5); }
+  }
+
+  /* Fade slide in */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* No select for canvas */
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
   }
 }
