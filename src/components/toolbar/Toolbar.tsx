@@ -10,7 +10,11 @@ import {
   Eraser,
   Undo2,
   Redo2,
-  Type
+  Type,
+  ArrowRight,
+  Diamond,
+  Triangle,
+  Star
 } from 'lucide-react';
 import { Tool } from '@/types/canvas';
 import { cn } from '@/lib/utils';
@@ -33,11 +37,15 @@ const tools: { id: Tool; icon: React.ElementType; label: string; shortcut: strin
   { id: 'select', icon: MousePointer2, label: 'Select', shortcut: 'V' },
   { id: 'pan', icon: Hand, label: 'Pan', shortcut: 'H' },
   { id: 'pencil', icon: Pencil, label: 'Pencil', shortcut: 'P' },
+  { id: 'eraser', icon: Eraser, label: 'Eraser', shortcut: 'E' },
+  { id: 'line', icon: Minus, label: 'Line', shortcut: 'L' },
+  { id: 'arrow', icon: ArrowRight, label: 'Arrow', shortcut: 'A' },
   { id: 'rectangle', icon: Square, label: 'Rectangle', shortcut: 'R' },
   { id: 'ellipse', icon: Circle, label: 'Ellipse', shortcut: 'O' },
-  { id: 'line', icon: Minus, label: 'Line', shortcut: 'L' },
+  { id: 'diamond', icon: Diamond, label: 'Diamond', shortcut: 'D' },
+  { id: 'triangle', icon: Triangle, label: 'Triangle', shortcut: 'G' },
+  { id: 'star', icon: Star, label: 'Star', shortcut: 'S' },
   { id: 'text', icon: Type, label: 'Text', shortcut: 'T' },
-  { id: 'eraser', icon: Eraser, label: 'Eraser', shortcut: 'E' },
 ];
 
 export function Toolbar({ 
@@ -57,20 +65,20 @@ export function Toolbar({
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="absolute top-4 left-1/2 -translate-x-1/2 z-50"
     >
-      <div className="glass-panel rounded-2xl p-1.5 flex items-center gap-1">
+      <div className="glass-panel rounded-2xl p-1.5 flex items-center gap-0.5">
         {/* Undo/Redo */}
-        <div className="flex items-center gap-0.5 pr-2 border-r border-border/50">
+        <div className="flex items-center gap-0.5 pr-1.5 border-r border-border/50">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={onUndo}
                 disabled={!canUndo}
                 className={cn(
-                  'tool-button',
+                  'tool-button w-8 h-8',
                   !canUndo && 'opacity-40 cursor-not-allowed'
                 )}
               >
-                <Undo2 className="w-4 h-4" />
+                <Undo2 className="w-3.5 h-3.5" />
               </button>
             </TooltipTrigger>
             <TooltipContent className="tooltip-content">
@@ -85,11 +93,11 @@ export function Toolbar({
                 onClick={onRedo}
                 disabled={!canRedo}
                 className={cn(
-                  'tool-button',
+                  'tool-button w-8 h-8',
                   !canRedo && 'opacity-40 cursor-not-allowed'
                 )}
               >
-                <Redo2 className="w-4 h-4" />
+                <Redo2 className="w-3.5 h-3.5" />
               </button>
             </TooltipTrigger>
             <TooltipContent className="tooltip-content">
@@ -108,9 +116,9 @@ export function Toolbar({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onToolChange(tool.id)}
-                  className={cn('tool-button', activeTool === tool.id && 'active')}
+                  className={cn('tool-button w-8 h-8', activeTool === tool.id && 'active')}
                 >
-                  <tool.icon className="w-4 h-4" />
+                  <tool.icon className="w-3.5 h-3.5" />
                 </motion.button>
               </TooltipTrigger>
               <TooltipContent className="tooltip-content">
@@ -122,7 +130,7 @@ export function Toolbar({
         </div>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-border/50 mx-1" />
+        <div className="w-px h-6 bg-border/50 mx-0.5" />
 
         {/* Export & Theme */}
         <div className="flex items-center gap-0.5">

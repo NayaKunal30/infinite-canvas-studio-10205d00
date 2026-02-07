@@ -9,7 +9,8 @@ import {
   FreehandElement,
   RectangleElement,
   EllipseElement,
-  LineElement
+  LineElement,
+  ArrowElement
 } from '@/types/canvas';
 
 // State shape
@@ -35,6 +36,7 @@ type CanvasAction =
   | { type: 'START_DRAWING'; element: CanvasElement }
   | { type: 'UPDATE_DRAWING'; points?: Point[]; width?: number; height?: number; endPoint?: Point }
   | { type: 'FINISH_DRAWING' }
+  | { type: 'REPLACE_CURRENT'; element: CanvasElement }
   | { type: 'ADD_ELEMENT'; element: CanvasElement }
   | { type: 'UPDATE_ELEMENT'; id: string; updates: Partial<CanvasElement> }
   | { type: 'DELETE_ELEMENTS'; ids: string[] }
@@ -110,6 +112,14 @@ function canvasReducer(state: CanvasState, action: CanvasAction): CanvasState {
         isDrawing: false, 
         elements: [...state.elements, state.currentElement],
         currentElement: null 
+      };
+    
+    case 'REPLACE_CURRENT':
+      return {
+        ...state,
+        isDrawing: false,
+        elements: [...state.elements, action.element],
+        currentElement: null,
       };
     
     case 'ADD_ELEMENT':
@@ -225,6 +235,11 @@ export function useCanvasState() {
     dispatch({ type: 'FINISH_DRAWING' });
     pushHistory();
   }, [pushHistory]);
+
+  const replaceCurrentWithElement = useCallback((element: CanvasElement) => {
+    dispatch({ type: 'REPLACE_CURRENT', element });
+    pushHistory();
+  }, [pushHistory]);
   
   const addElement = useCallback((element: CanvasElement) => {
     dispatch({ type: 'ADD_ELEMENT', element });
@@ -266,6 +281,7 @@ export function useCanvasState() {
     deleteElements,
     selectElements,
     clearSelection,
+    replaceCurrentWithElement,
     undo,
     redo,
     canUndo,

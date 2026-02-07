@@ -9,7 +9,10 @@ export type Tool =
   | 'ellipse'
   | 'line'
   | 'arrow'
-  | 'text';
+  | 'text'
+  | 'diamond'
+  | 'triangle'
+  | 'star';
 
 export interface Point {
   x: number;
@@ -30,7 +33,10 @@ export type ElementType =
   | 'ellipse'
   | 'line'
   | 'arrow'
-  | 'text';
+  | 'text'
+  | 'diamond'
+  | 'triangle'
+  | 'star';
 
 export interface BaseElement {
   id: string;
@@ -84,13 +90,32 @@ export interface TextElement extends BaseElement {
   textAlign: 'left' | 'center' | 'right';
 }
 
+export interface DiamondElement extends BaseElement {
+  type: 'diamond';
+}
+
+export interface TriangleElement extends BaseElement {
+  type: 'triangle';
+  // Vertices stored relative to bounding box
+  vertices?: [Point, Point, Point];
+}
+
+export interface StarElement extends BaseElement {
+  type: 'star';
+  innerRadius: number;
+  points: number; // number of star points (5, 6, 8)
+}
+
 export type CanvasElement = 
   | FreehandElement 
   | RectangleElement 
   | EllipseElement 
   | LineElement 
   | ArrowElement 
-  | TextElement;
+  | TextElement
+  | DiamondElement
+  | TriangleElement
+  | StarElement;
 
 export interface Camera {
   x: number;
