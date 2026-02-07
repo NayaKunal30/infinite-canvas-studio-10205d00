@@ -22,6 +22,7 @@ export function WhiteboardEditor() {
     selectElements,
     deleteElements,
     addElement,
+    replaceCurrentWithElement,
     undo,
     redo,
     canUndo,
@@ -46,7 +47,6 @@ export function WhiteboardEditor() {
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
-    // Get SVG ref from canvas
     const interval = setInterval(() => {
       if (canvasRef.current) {
         const svg = canvasRef.current.getSvgRef();
@@ -63,7 +63,7 @@ export function WhiteboardEditor() {
     };
   }, []);
 
-  // Hide welcome after 3 seconds or on first interaction
+  // Hide welcome after 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => setShowWelcome(false), 4000);
     return () => clearTimeout(timer);
@@ -71,7 +71,11 @@ export function WhiteboardEditor() {
 
   // Keyboard shortcuts
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    // Tool shortcuts
+    // Skip if typing in an input
+    if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) {
+      return;
+    }
+
     if (!e.metaKey && !e.ctrlKey) {
       const toolMap: Record<string, Tool> = {
         'v': 'select',
@@ -80,8 +84,12 @@ export function WhiteboardEditor() {
         'r': 'rectangle',
         'o': 'ellipse',
         'l': 'line',
+        'a': 'arrow',
         't': 'text',
         'e': 'eraser',
+        'd': 'diamond',
+        'g': 'triangle',
+        's': 'star',
       };
       
       const tool = toolMap[e.key.toLowerCase()];
@@ -141,6 +149,8 @@ export function WhiteboardEditor() {
         onFinishDrawing={finishDrawing}
         onSelectElements={selectElements}
         onAddElement={addElement}
+        onDeleteElements={deleteElements}
+        onReplaceCurrentWithElement={replaceCurrentWithElement}
       />
 
       {/* Toolbar */}
@@ -204,7 +214,7 @@ export function WhiteboardEditor() {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-white"
+                  className="text-primary-foreground"
                 >
                   <path d="M12 19l7-7 3 3-7 7-3-3z" />
                   <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
@@ -218,7 +228,7 @@ export function WhiteboardEditor() {
               </h1>
               
               <p className="text-muted-foreground mb-6">
-                An infinite canvas for your ideas. Draw, sketch, and create freely.
+                An infinite canvas for your ideas. Draw shapes, they'll be auto-recognized!
               </p>
               
               <div className="flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
@@ -227,12 +237,12 @@ export function WhiteboardEditor() {
                   <span>Pencil</span>
                 </div>
                 <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-secondary/50">
-                  <span className="kbd">R</span>
-                  <span>Rectangle</span>
+                  <span className="kbd">E</span>
+                  <span>Eraser</span>
                 </div>
                 <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-secondary/50">
-                  <span className="kbd">H</span>
-                  <span>Pan</span>
+                  <span className="kbd">T</span>
+                  <span>Text</span>
                 </div>
                 <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-secondary/50">
                   <Command className="w-3 h-3" />
@@ -252,7 +262,7 @@ export function WhiteboardEditor() {
         transition={{ delay: 0.5 }}
         className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground/50"
       >
-        Infinite Canvas • Scroll to zoom • Drag to draw
+        Infinite Canvas • Scroll to zoom • Draw shapes to auto-recognize
       </motion.div>
     </div>
   );
